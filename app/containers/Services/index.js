@@ -11,12 +11,40 @@
 
 import React from 'react';
 
-export default class Services extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export default class Services extends React.Component { 
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value + ' ' + document.getElementById("id1").value);
+    event.preventDefault();
+  }
+  
   render() {
     return (
-      <h1>
-        This is Services component!
-      </h1>
+      
+      <div>
+        
+        <form onSubmit={this.handleSubmit}>
+          Name:
+          <input type="text" value= {this.state.value} onChange={this.handleChange} />   
+          <p>
+            <textarea name="message" id="id1" rows="5" ></textarea>
+          </p>
+          <input type="submit" value="Create" />
+        </form>
+        
+
+      </div>
     );
   }
 }
