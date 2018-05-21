@@ -14,18 +14,18 @@ import React from 'react';
 export default class Services extends React.Component { 
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    this.state = {title: ''};
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
+  handleTitleChange(event) {
+    this.setState({title: event.target.value});
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value + ' ' + document.getElementById("id1").value);
+    alert('A name was submitted: ' + this.state.title + ' ' + document.getElementById("id1").value);
     event.preventDefault();
   }
   
@@ -36,7 +36,7 @@ export default class Services extends React.Component {
         
         <form onSubmit={this.handleSubmit}>
           Name:
-          <input type="text" value= {this.state.value} onChange={this.handleChange} />   
+          <input type="text" value={this.state.title} onChange={this.handleTitleChange} />   
           <p>
             <textarea name="message" id="id1" rows="5" ></textarea>
           </p>
