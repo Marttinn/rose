@@ -51,10 +51,7 @@ export default class Services extends React.Component {
     return (
       
       <div>
-        {this.languages.map((lang)=> {return <div>
-         <h2>{lang}</h2>
-         <h3>dalsi jazyk</h3> 
-        </div>})}
+       
         
         <form onSubmit={this.handleSubmit}>
           Name:
