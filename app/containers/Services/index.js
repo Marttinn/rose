@@ -12,9 +12,19 @@
 import React from 'react';
 
 export default class Services extends React.Component { 
+
   constructor(props) {
     super(props);
     this.state = {title: '', text: '', option: ''};
+
+
+    this.languages = [
+      'CZ',
+      'DE',
+      'EN',
+      'SP',
+      'SK'
+    ]
 
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
@@ -41,6 +51,10 @@ export default class Services extends React.Component {
     return (
       
       <div>
+        {this.languages.map((lang)=> {return <div>
+         <h2>{lang}</h2>
+         <h3>dalsi jazyk</h3> 
+        </div>})}
         
         <form onSubmit={this.handleSubmit}>
           Name:
@@ -49,9 +63,7 @@ export default class Services extends React.Component {
             <textarea value={this.state.text} onChange={this.handleTextChange} rows="5" ></textarea>
           </p>
           <select value={this.state.value} onChange={this.handleSelectChange}>
-            <option value="CZ">CZ</option>
-            <option value="DE">DE</option>
-            <option value="EN">EN</option>
+            {this.languages.map((lang)=> {return <option value={lang}>{lang}</option>})}
           </select>
           <input type="submit" value="Create" />
         </form>
