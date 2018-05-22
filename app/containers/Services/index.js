@@ -14,10 +14,11 @@ import React from 'react';
 export default class Services extends React.Component { 
   constructor(props) {
     super(props);
-    this.state = {title: '', text: ''};
+    this.state = {title: '', text: '', option: ''};
 
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -27,9 +28,12 @@ export default class Services extends React.Component {
   handleTextChange(event) {
     this.setState({text: event.target.value});
   }
+  handleSelectChange(event) {
+    this.setState({option: event.target.value});
+  }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.title + ' ' + this.state.text);
+    alert('A name was submitted: ' + this.state.title + ' ' + this.state.text + ' ' + this.state.option );
     event.preventDefault();
   }
   
@@ -44,6 +48,11 @@ export default class Services extends React.Component {
           <p>
             <textarea value={this.state.text} onChange={this.handleTextChange} rows="5" ></textarea>
           </p>
+          <select value={this.state.value} onChange={this.handleSelectChange}>
+            <option value="CZ">CZ</option>
+            <option value="DE">DE</option>
+            <option value="EN">EN</option>
+          </select>
           <input type="submit" value="Create" />
         </form>
         
