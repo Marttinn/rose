@@ -1,21 +1,28 @@
-
-
 import React from 'react';
-import { Link } from 'react-router-dom';
 
+import { graphql, ApolloProvider } from 'react-apollo';
+import gql from 'graphql-tag';
 
-export default class Services extends React.Component { 
+export class Services extends React.Component {
+  constructor(...args){
+    super(...args);
+  }
+
   render() {
     return (
-      <h1>
-        This is ServicesPage component!
-        <p>
-        <Link to="/services/new">
-          Create new
-        </Link>
-        </p>
-
-      </h1>
+      <div>    
+        {this.props.data.loading ? <Text>Loading...</Text> : null}
+        {this.props.data.allServiceses ? this.props.data.allServiceses.map((s) => <Text>{s.text}</Text>) : null}
+      </div>
     );
   }
 }
+
+export default graphql(gql`
+  {allServiceses{
+    id,
+    text,
+    title,
+    language
+  }}
+`)(Services);
