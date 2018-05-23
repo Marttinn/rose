@@ -1,11 +1,15 @@
 import React from 'react';
+import { graphql, ApolloProvider } from 'react-apollo';
+import gql from 'graphql-tag';
 
 export default class ServiceNew extends React.Component { 
 
   constructor(props) {
     super(props);
     this.state = {title: '', text: '', option: ''};
+    this.create = this.create.bind(this);
 
+    
 
     this.languages = [
       'CZ',
@@ -32,10 +36,25 @@ export default class ServiceNew extends React.Component {
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.title + ' ' + this.state.text + ' ' + this.state.option );
+    //alert('A name was submitted: ' + this.state.title + ' ' + this.state.text + ' ' + this.state.option );
+    
     event.preventDefault();
   }
+  create() {
+      const title = this.state.title;
+      const text = this.state.text;
+      const option = this.state.option;
   
+     this.props.mutate({
+       variables:{
+         identificator:this.state.id
+        }
+      }).then((success)=> {
+        this.setState({
+          deleted : true
+        })
+    })
+    }
   render() {
     return (
       
@@ -51,7 +70,8 @@ export default class ServiceNew extends React.Component {
           <select value={this.state.value} onChange={this.handleSelectChange}>
             {this.languages.map((lang)=> {return <option value={lang}>{lang}</option>})}
           </select>
-          <input type="submit" value="Create" />
+          <button onClick={this.create}>Create2</button>
+          <input type="submit" value="Create"/>
         </form>
         
 
@@ -59,3 +79,11 @@ export default class ServiceNew extends React.Component {
     );
   }
 }
+const CreateServiceItemQL = graphql(gql`
+mutation createService($text:String, $title:String, $lang:String){
+  createServices(text:$text, title:$title, language:$lang){
+    text,title,language
+  }
+}
+`)(ServiceNew)
+
