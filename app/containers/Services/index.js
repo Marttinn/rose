@@ -1,7 +1,7 @@
 import React from 'react';
-
 import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
+import { Link } from 'react-router-dom';
 
 export class Services extends React.Component {
   constructor(...args){
@@ -10,9 +10,17 @@ export class Services extends React.Component {
 
   render() {
     return (
-      <div>    
-        {this.props.data.loading ? <Text>Loading...</Text> : null}
-        {this.props.data.allServiceses ? this.props.data.allServiceses.map((s) => <Text>{s.text}</Text>) : null}
+    <div>
+      This is ServicesPage component!
+      <p>
+      <Link to="/services/new">
+        Create new
+      </Link>
+      </p>
+         
+        {this.props.data.loading ? <span>Loading...</span> : null}
+        {this.props.data.AllServiceses ? this.props.data.AllServiceses.map((s) => <span>{s.text}</span>) : null}
+
       </div>
     );
   }
