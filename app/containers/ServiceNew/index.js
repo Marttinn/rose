@@ -1,15 +1,14 @@
 import React from 'react';
 import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
+import { link } from 'react-router-dom';
 
-export default class ServiceNew extends React.Component { 
+export class ServiceNew extends React.Component { 
 
   constructor(props) {
     super(props);
     this.state = {title: '', text: '', option: ''};
     this.create = this.create.bind(this);
-
-    
 
     this.languages = [
       'CZ',
@@ -51,7 +50,7 @@ export default class ServiceNew extends React.Component {
         }
       }).then((success)=> {
         this.setState({
-          deleted : true
+          created : true
         })
     })
     }
@@ -70,7 +69,6 @@ export default class ServiceNew extends React.Component {
           <select value={this.state.value} onChange={this.handleSelectChange}>
             {this.languages.map((lang)=> {return <option value={lang}>{lang}</option>})}
           </select>
-          <button onClick={this.create}>Create2</button>
           <input type="submit" value="Create"/>
         </form>
         
@@ -79,6 +77,13 @@ export default class ServiceNew extends React.Component {
     );
   }
 }
+export default graphql(gql`
+  {newService{
+    text,
+    title,
+    language  
+  }}
+`)(ServiceNew);
 const CreateServiceItemQL = graphql(gql`
 mutation createService($text:String, $title:String, $lang:String){
   createServices(text:$text, title:$title, language:$lang){
