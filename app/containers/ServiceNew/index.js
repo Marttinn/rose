@@ -29,7 +29,7 @@ class ServiceNew extends React.Component {
     this.setState({text: event.target.value});
   }
   handleSelectChange(event) {
-    this.setState({langu: event.target.value});
+    this.setState({language: event.target.value});
   }
 
   handleSubmit(event) {
@@ -38,13 +38,13 @@ class ServiceNew extends React.Component {
   create() {
       const title = this.state.title;
       const text = this.state.text;
-      const language = this.state.langu;
+      const language = this.state.language;
   
      this.props.mutate({
        variables:{
         title : this.state.title,
         text : this.state.text,
-        language : this.state.langu
+        language : this.state.language
         }
       }).then((success)=> {
         this.setState({

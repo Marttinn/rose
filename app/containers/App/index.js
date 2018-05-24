@@ -17,19 +17,15 @@ import { Switch, Route } from 'react-router-dom';
 import HomePage from 'containers/HomePage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
-
-
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import {ApolloProvider} from 'react-apollo';
 import Services from '../Services';
 import ServiceNew from '../ServiceNew';
+import { MuiThemeProvider } from '@material-ui/core';
 
 
-
-
- 
 
 const client = new ApolloClient({
   link: new HttpLink({uri:'https://api.graph.cool/simple/v1/cjheviv534c3b0158hvmz4sde'}),
@@ -39,7 +35,7 @@ const client = new ApolloClient({
 export default function App() {
   return (
     <ApolloProvider client={client}>
-    <div>
+    <MuiThemeProvider>
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route exact path="/services/new" component={ServiceNew} />
@@ -49,7 +45,7 @@ export default function App() {
 
       </Switch>
       
-    </div>
+    </MuiThemeProvider>
   </ApolloProvider>
     
   );
