@@ -23,6 +23,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import {ApolloProvider} from 'react-apollo';
 import Services from '../Services';
 import ServiceNew from '../ServiceNew';
+import ServiceEdit from '../ServiceEdit';
 import { MuiThemeProvider } from '@material-ui/core';
 
 
@@ -35,17 +36,15 @@ const client = new ApolloClient({
 export default function App() {
   return (
     <ApolloProvider client={client}>
-    <MuiThemeProvider>
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route exact path="/services/new" component={ServiceNew} />
+        <Route exact path="/services/:id" component={ServiceEdit} />
         <Route exact path="/services" component={Services} />
         <Route component={NotFoundPage} />
         
 
       </Switch>
-      
-    </MuiThemeProvider>
   </ApolloProvider>
     
   );

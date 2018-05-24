@@ -7,7 +7,7 @@ class ServiceNew extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {title: '', text: '', langu: ''};
+    this.state = {title: '', text: '', language: 'CZ'};
     this.languages = [
       'CZ',
       'DE',
@@ -44,7 +44,7 @@ class ServiceNew extends React.Component {
        variables:{
         title : this.state.title,
         text : this.state.text,
-        language : this.state.language
+        lang : this.state.language
         }
       }).then((success)=> {
         this.setState({

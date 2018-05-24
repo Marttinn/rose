@@ -17,7 +17,7 @@ export default class ServiceItem extends React.Component{
         },
         deleted: false
       }
-      
+      console.log('ServiceItem', this.props)
     }
     
     delete() {
@@ -42,19 +42,21 @@ export default class ServiceItem extends React.Component{
     }
   
     render(){
+      // TODO: dialogs
       return(
         this.state.deleted ? null : 
         <div style={this.state.mystyle}>
           {this.props.service.id}
         <span style={{paddingLeft:'10px'}}>{this.props.service.title}</span> 
         <span style={{paddingLeft:'10px'}}>  {this.props.service.language}</span> 
-        <button onClick={this.delete}>Delete</button>
+        <Button variant="raised" color="secondary"onClick={this.delete}> Delete </Button> 
+        <hr/>
         </div>
     )
   }
   }
-
-  const ServiceItemQL = graphql(gql`
+  
+  const ServiceItemQL =graphql(gql`
   mutation  deleteService($identificator:ID!){
     deleteServices(id:$identificator){
       id
