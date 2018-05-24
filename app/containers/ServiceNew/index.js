@@ -7,9 +7,7 @@ class ServiceNew extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {title: '', text: '', option: ''};
-    this.create = this.create.bind(this);
-
+    this.state = {title: '', text: '', langu: ''};
     this.languages = [
       'CZ',
       'DE',
@@ -17,7 +15,7 @@ class ServiceNew extends React.Component {
       'SP',
       'SK'
     ]
-
+    this.create = this.create.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -31,22 +29,22 @@ class ServiceNew extends React.Component {
     this.setState({text: event.target.value});
   }
   handleSelectChange(event) {
-    this.setState({option: event.target.value});
+    this.setState({langu: event.target.value});
   }
 
   handleSubmit(event) {
-    //alert('A name was submitted: ' + this.state.title + ' ' + this.state.text + ' ' + this.state.option );
-    
     event.preventDefault();
   }
   create() {
       const title = this.state.title;
       const text = this.state.text;
-      const option = this.state.option;
+      const language = this.state.langu;
   
      this.props.mutate({
        variables:{
-         identificator:this.state.id
+        title : this.state.title,
+        text : this.state.text,
+        language : this.state.langu
         }
       }).then((success)=> {
         this.setState({
@@ -67,9 +65,9 @@ class ServiceNew extends React.Component {
             <textarea value={this.state.text} onChange={this.handleTextChange} rows="5" ></textarea>
           </p>
           <select value={this.state.value} onChange={this.handleSelectChange}>
-            {this.languages.map((lang)=> {return <option value={lang}>{lang}</option>})}
+            {this.languages.map((lang,index)=> {return <option key ={index} value={lang}>{lang}</option>})}
           </select>
-          <input type="submit" value="Create"/>
+          <button onClick={this.create}>Create</button>
         </form>
         
 

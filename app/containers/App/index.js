@@ -25,6 +25,10 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import {ApolloProvider} from 'react-apollo';
 import Services from '../Services';
 import ServiceNew from '../ServiceNew';
+
+
+
+
  
 
 const client = new ApolloClient({
