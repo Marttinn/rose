@@ -84,11 +84,12 @@ export default graphql(gql`
     language  
   }}
 `)(ServiceNew);
-const CreateServiceItemQL = graphql(gql`
+const ServiceNewQL = graphql(gql`
 mutation createService($text:String, $title:String, $lang:String){
   createServices(text:$text, title:$title, language:$lang){
-    text,title,language
+    text,title
   }
 }
-`)(ServiceNew)
+  `)(ServiceNew)
+  
 

@@ -4,6 +4,14 @@ import gql from 'graphql-tag';
 import { Link } from 'react-router-dom';
 import ServiceItem from '../Services/ServiceItem.js';
 
+const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
+  input: {
+    display: 'none',
+  },
+});
 export class Services extends React.Component {
   constructor(...args){
     super(...args);
