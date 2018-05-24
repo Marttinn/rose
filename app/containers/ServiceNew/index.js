@@ -3,7 +3,7 @@ import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
 import { link } from 'react-router-dom';
 
-export class ServiceNew extends React.Component { 
+class ServiceNew extends React.Component { 
 
   constructor(props) {
     super(props);
@@ -77,19 +77,13 @@ export class ServiceNew extends React.Component {
     );
   }
 }
+  
 export default graphql(gql`
-  {newService{
-    text,
-    title,
-    language  
-  }}
-`)(ServiceNew);
-const ServiceNewQL = graphql(gql`
-mutation createService($text:String, $title:String, $lang:String){
+  mutation createService($text:String, $title:String, $lang:String){
   createServices(text:$text, title:$title, language:$lang){
-    text,title
+    text,title,language
   }
 }
-  `)(ServiceNew)
+`)(ServiceNew);
   
 
