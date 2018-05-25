@@ -54,7 +54,10 @@ class ServiceEdit extends React.Component {
         })
     })
     }
+
+    
   render() {
+    console.log('ServiceEdit:render()', this.props )
     return (
       
       <div>

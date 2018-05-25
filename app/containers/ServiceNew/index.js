@@ -3,6 +3,7 @@ import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
 import { link } from 'react-router-dom';
 
+import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -23,6 +24,10 @@ class ServiceNew extends React.Component {
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onEditorStateChange = this.onEditorStateChange.bind(this);
+    this.state = {
+      editorState: EditorState.createEmpty(),
+    };
   }
 
   handleTitleChange(event) {
@@ -46,7 +51,7 @@ class ServiceNew extends React.Component {
      this.props.mutate({
        variables:{
         title : this.state.title,
-        text : this.state.text,
+        text : this.state.editorState.getCurrentContent().toString(),
         lang : this.state.language
         }
       }).then((success)=> {
@@ -55,7 +60,15 @@ class ServiceNew extends React.Component {
         })
     })
     }
+    onEditorStateChange (editorState)  {
+      
+      this.setState({
+        editorState,
+
+      });
+    };
   render() {
+    const { editorState } = this.state;
     return (
       
       <div>
