@@ -23,8 +23,8 @@ export class Services extends React.Component {
     <div>
       This is ServicesPage component!
       <p>
-      <Link to="/services/new">
-        Create new
+      <Link to="/services/new" color="blue">
+        Create new service
       </Link>
       
       </p>
