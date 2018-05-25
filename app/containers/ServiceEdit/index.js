@@ -3,7 +3,7 @@ import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
 import { link } from 'react-router-dom';
 
-class ServiceNew extends React.Component { 
+class ServiceEdit extends React.Component { 
 
   constructor(props) {
     super(props);
@@ -21,7 +21,7 @@ class ServiceNew extends React.Component {
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     console.log('ServiceEdit', this.props )
-    // this.props.match.params.id
+    // this.props.id
   }
 
   handleTitleChange(event) {
@@ -77,15 +77,23 @@ class ServiceNew extends React.Component {
     );
   }
 }
+
+
   
-export default graphql(gql`
-query getService($id:ID!){
-  Services(id:$id){
-    text,
-    title,
-    language
+const ServiceEditQL = graphql(gql`
+  query getService($id:ID!){
+    Services(id:$id){
+      text,
+      title,
+      language
+    }
+  }
+`)(ServiceEdit);
+ 
+  
+export default class ServiceEditMatchId extends React.Component { 
+  render() {
+    return (<ServiceEditQL id={this.props.match.params.id} />)
   }
 }
-`)(ServiceNew);
-  
 
