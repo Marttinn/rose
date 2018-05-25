@@ -3,6 +3,9 @@ import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
 import { link } from 'react-router-dom';
 
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
 class ServiceNew extends React.Component { 
 
   constructor(props) {
@@ -62,7 +65,14 @@ class ServiceNew extends React.Component {
           Name:
           <input type="text" value={this.state.title} onChange={this.handleTitleChange} />   
           <p>
-            <textarea value={this.state.text} onChange={this.handleTextChange} rows="5" ></textarea>
+          
+          <Editor
+            editorState={editorState}
+            toolbarClassName="toolbarClassName"
+            wrapperClassName="wrapperClassName"
+            editorClassName="editorClassName"
+            onEditorStateChange={this.onEditorStateChange}
+          />
           </p>
           <select value={this.state.value} onChange={this.handleSelectChange}>
             {this.languages.map((lang,index)=> {return <option key ={index} value={lang}>{lang}</option>})}

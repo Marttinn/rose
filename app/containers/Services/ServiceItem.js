@@ -26,7 +26,7 @@ export default class ServiceItem extends React.Component{
       }
       console.log('ServiceItem', this.props)
       this.handleClickOpen = this.handleClickOpen.bind(this);
-      this.handleClickClose = this.handleClickClose.bind(this);
+      this.handleClose = this.handleClose.bind(this);
     }
     
     handleClickOpen = () => {
