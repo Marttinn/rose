@@ -84,7 +84,7 @@ class ServiceEdit extends React.Component {
 
         <form onSubmit={this.handleSubmit}>
           Name:
-          <input type="text" value={this.state.title} onChange={this.handleTitleChange} />   
+          <input type="text" value={this.state.title} onChange={this.handleTitleChange}/>   
           <p>
           
           <Editor
@@ -100,8 +100,6 @@ class ServiceEdit extends React.Component {
           </select>
           <button onClick={this.edit}>Edit</button>
         </form>
-        
-
       </div>
     );
   }
