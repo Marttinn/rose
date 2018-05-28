@@ -12,7 +12,6 @@ class ServiceNew extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {title: '', text: '', language: 'CZ'};
     this.languages = [
       'CZ',
       'DE',
@@ -20,6 +19,7 @@ class ServiceNew extends React.Component {
       'SP',
       'SK'
     ]
+    this.state = {title: '', text: '', language: 'CZ'};
     this.create = this.create.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
@@ -27,7 +27,7 @@ class ServiceNew extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onEditorStateChange = this.onEditorStateChange.bind(this);
     this.state = {
-      editorState: EditorState.createEmpty(),
+      editorState: EditorState.createEmpty()
     };
   }
 

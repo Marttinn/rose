@@ -62,10 +62,7 @@ export default class ServiceItem extends React.Component{
       return(
         this.state.deleted ? null : 
         <div style={this.state.mystyle}>
-
-        <Button variant="raised" size="small" color="primary" onClick={this.handleClickOpen}> {this.props.service.id} </Button>  
-        <Link to="/services/:id" color="blue">{this.props.service.id}</Link> 
-
+        <Link to={"/services/" + this.props.service.id}>{this.props.service.id}</Link>
         <span style={{paddingLeft:'10px'}}>{this.props.service.title}</span> 
         <span style={{paddingLeft:'10px'}}>  {this.props.service.language}</span> 
         <Button variant="raised" size="small" color="secondary"onClick={this.handleClickOpen}> Delete </Button>

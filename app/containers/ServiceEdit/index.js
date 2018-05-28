@@ -2,6 +2,10 @@ import React from 'react';
 import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
 import { link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { EditorState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 class ServiceEdit extends React.Component { 
 
@@ -15,11 +19,15 @@ class ServiceEdit extends React.Component {
       'SP',
       'SK'
     ]
-    this.create = this.create.bind(this);
+    this.edit = this.edit.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onEditorStateChange = this.onEditorStateChange.bind(this);
+    this.state = {
+      editorState: EditorState.createEmpty()
+    };
     console.log('ServiceEdit', this.props )
     // this.props.id
   }
@@ -37,7 +45,7 @@ class ServiceEdit extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
   }
-  create() {
+  edit() {
       const title = this.state.title;
       const text = this.state.text;
       const language = this.state.language;
@@ -50,29 +58,47 @@ class ServiceEdit extends React.Component {
         }
       }).then((success)=> {
         this.setState({
-          created : true
+          edited : true
         })
     })
     }
+    onEditorStateChange (editorState)  {
+      
+      this.setState({
+        editorState,
+
+      });
+    };
 
     
   render() {
+    const { editorState } = this.state;
     console.log('ServiceEdit:render()', this.props )
     return (
       
       <div>
        
-        
+        <Link to="/services">
+          Services
+        </Link>
+
         <form onSubmit={this.handleSubmit}>
           Name:
           <input type="text" value={this.state.title} onChange={this.handleTitleChange} />   
           <p>
-            <textarea value={this.state.text} onChange={this.handleTextChange} rows="5" ></textarea>
+          
+          <Editor
+            editorState={editorState}
+            toolbarClassName="toolbarClassName"
+            wrapperClassName="wrapperClassName"
+            editorClassName="editorClassName"
+            onEditorStateChange={this.onEditorStateChange}
+          />
           </p>
           <select value={this.state.value} onChange={this.handleSelectChange}>
             {this.languages.map((lang,index)=> {return <option key ={index} value={lang}>{lang}</option>})}
           </select>
-          <button onClick={this.create}>Create</button>
+          <button onClick={this.edit}>Edit</button>
         </form>
         
 
@@ -81,8 +107,6 @@ class ServiceEdit extends React.Component {
   }
 }
 
-
-  
 const ServiceEditQL = graphql(gql`
   query getService($id:ID!){
     Services(id:$id){
@@ -92,8 +116,7 @@ const ServiceEditQL = graphql(gql`
     }
   }
 `)(ServiceEdit);
- 
-  
+
 export default class ServiceEditMatchId extends React.Component { 
   render() {
     return (<ServiceEditQL id={this.props.match.params.id} />)
