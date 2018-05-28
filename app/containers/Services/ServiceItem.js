@@ -58,11 +58,14 @@ export default class ServiceItem extends React.Component{
     }
   
     render(){
-      // TODO: dialogs
+      // TODO: dialogs  
       return(
         this.state.deleted ? null : 
         <div style={this.state.mystyle}>
-          {this.props.service.id}
+
+        <Button variant="raised" size="small" color="primary" onClick={this.handleClickOpen}> {this.props.service.id} </Button>  
+        <Link to="/services/:id" color="blue">{this.props.service.id}</Link> 
+
         <span style={{paddingLeft:'10px'}}>{this.props.service.title}</span> 
         <span style={{paddingLeft:'10px'}}>  {this.props.service.language}</span> 
         <Button variant="raised" size="small" color="secondary"onClick={this.handleClickOpen}> Delete </Button>
@@ -72,18 +75,16 @@ export default class ServiceItem extends React.Component{
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">{"Do you really want to delete this service?"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Let Google help apps determine location. This means sending anonymous location data to
-              Google, even when no apps are running.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               Disagree
             </Button>
-            <Button onClick={this.handleClose} color="primary" autoFocus>
+            <Button onClick={this.delete} color="primary" autoFocus>
               Agree
             </Button>
           </DialogActions>

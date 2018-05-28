@@ -2,6 +2,7 @@ import React from 'react';
 import { graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
 import { link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
@@ -72,7 +73,9 @@ class ServiceNew extends React.Component {
     return (
       
       <div>
-       
+        <Link to="/services">
+          Services
+        </Link>
         
         <form onSubmit={this.handleSubmit}>
           Name:
