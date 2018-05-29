@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql, ApolloProvider } from 'react-apollo';
+import { compose, graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
 import { link } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -11,7 +11,12 @@ class ServiceEdit extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {title: '', text: '', language: 'CZ'};
+    this.state = {
+      title: '',
+      text: '',
+      language: 'CZ',
+      editorState: EditorState.createEmpty()
+    };
     this.languages = [
       'CZ',
       'DE',
@@ -25,9 +30,6 @@ class ServiceEdit extends React.Component {
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onEditorStateChange = this.onEditorStateChange.bind(this);
-    this.state = {
-      editorState: EditorState.createEmpty()
-    };
     console.log('ServiceEdit', this.props )
     // this.props.id
   }
@@ -50,8 +52,9 @@ class ServiceEdit extends React.Component {
       const text = this.state.text;
       const language = this.state.language;
   
-     this.props.mutate({
+     this.props.updateService({
        variables:{
+         id: this.props.id,
         title : this.state.title,
         text : this.state.text,
         lang : this.state.language
@@ -69,6 +72,15 @@ class ServiceEdit extends React.Component {
 
       });
     };
+    componentWillReceiveProps(nextProps) {
+      if(nextProps.data.Services && nextProps.data){
+        this.setState({
+          title: nextProps.data.Services.title,
+          text: nextProps.data.Services.text,
+          language: nextProps.data.Services.language
+        })
+      }
+    }
 
     
   render() {
@@ -85,7 +97,7 @@ class ServiceEdit extends React.Component {
         <form onSubmit={this.handleSubmit}>
           Name:
           <input type="text" value={this.state.title} onChange={this.handleTitleChange}/>   
-          <p>
+          
           
           <Editor
             editorState={editorState}
@@ -94,9 +106,9 @@ class ServiceEdit extends React.Component {
             editorClassName="editorClassName"
             onEditorStateChange={this.onEditorStateChange}
           />
-          </p>
-          <select value={this.state.value} onChange={this.handleSelectChange}>
-            {this.languages.map((lang,index)=> {return <option key ={index} value={lang}>{lang}</option>})}
+          
+          <select value={this.state.language} onChange={this.handleSelectChange}>
+            {this.languages.map((lang,index)=> {return <option key ={index} value={lang} >{lang}</option>})}
           </select>
           <button onClick={this.edit}>Edit</button>
         </form>
@@ -104,20 +116,30 @@ class ServiceEdit extends React.Component {
     );
   }
 }
-
-const ServiceEditQL = graphql(gql`
-  query getService($id:ID!){
-    Services(id:$id){
-      text,
-      title,
-      language
-    }
+const getServiceQL = gql`query getService($id:ID!){
+  Services(id:$id){
+    text,
+    title,
+    language
   }
-`)(ServiceEdit);
+}
+`;
+
+  const updateServiceQL = gql` mutation updateService($id :ID!, $text:String, $title:String, $lang:String){
+    updateServices(id:$id, text:$text, title:$title, language:$lang){
+      text,title,language
+    }
+  }`;
+
+const ServiceEditQL = compose(
+  graphql(getServiceQL),
+  graphql(updateServiceQL, {
+    name: 'updateService'
+  }),
+)(ServiceEdit);
 
 export default class ServiceEditMatchId extends React.Component { 
   render() {
     return (<ServiceEditQL id={this.props.match.params.id} />)
   }
 }
-

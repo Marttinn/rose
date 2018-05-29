@@ -80,7 +80,7 @@ class ServiceNew extends React.Component {
         <form onSubmit={this.handleSubmit}>
           Name:
           <input type="text" value={this.state.title} onChange={this.handleTitleChange} />   
-          <p>
+          
           
           <Editor
             editorState={editorState}
@@ -89,7 +89,7 @@ class ServiceNew extends React.Component {
             editorClassName="editorClassName"
             onEditorStateChange={this.onEditorStateChange}
           />
-          </p>
+        
           <select value={this.state.value} onChange={this.handleSelectChange}>
             {this.languages.map((lang,index)=> {return <option key ={index} value={lang}>{lang}</option>})}
           </select>

@@ -38,7 +38,7 @@ export default function App() {
     <ApolloProvider client={client}>
       <Switch>
         <Route exact path="/" component={HomePage} />
-        <Route exact path="/services/new" component={ServiceNew} />
+        <Route exact path="/services/new" component={ServiceEdit} />
         <Route exact path="/services/:id" component={ServiceEdit} />
         <Route exact path="/services" component={Services} />
         <Route component={NotFoundPage} />
