@@ -21,6 +21,7 @@ class ServiceEdit extends React.Component {
       const contentState = ContentState.createFromBlockArray(blocks);
       const editorState = EditorState.createWithContent(contentState);
       this.state = {
+       id: props.match.params.id,
        title: this.props.data.Services.title,
        language: this.props.data.Services.language,
        editorState
@@ -108,12 +109,35 @@ class ServiceEdit extends React.Component {
         text : html,
         lang : language
       }
-      console.log('ServiceEdit::edit', variables)
+      console.log('ServiceEdit::save', variables)
         this.props.updateService({
        variables: variables
       }).then((success)=> {
         this.setState({
-          edited : true
+          saved : true
+        })
+    })
+    }
+    create() {
+      const title = this.state.title;
+      const language = this.state.language;
+
+      // transforming EditorState -> HTML
+      const contentState = this.state.editorState.getCurrentContent();
+      const blocks = convertToRaw(contentState);
+      const html = draftToHtml(blocks);
+  
+      const variables = {
+        title : title,
+        text : html,
+        lang : language
+      }
+      console.log('ServiceEdit::create', variables)
+        this.props.createService({
+       variables: variables
+      }).then((success)=> {
+        this.setState({
+          created : true
         })
     })
     }
@@ -154,7 +178,7 @@ class ServiceEdit extends React.Component {
           <select value={this.state.language} onChange={this.handleSelectChange}>
             {this.languages.map((lang,index)=> {return <option key ={index} value={lang} >{lang}</option>})}
           </select>
-          <button onClick={this.save}>Edit</button>
+          <button onClick={this.save}>Save</button>
         </form>
       </div>
     );
@@ -168,8 +192,13 @@ const getServiceQL = gql`query getService($id:ID!){
   }
 }
 `;
-  const updateServiceQL = gql` mutation updateService($id :ID!, $text:String, $title:String, $lang:String){
+const updateServiceQL = gql` mutation updateService($id :ID!, $text:String, $title:String, $lang:String){
     updateServices(id:$id, text:$text, title:$title, language:$lang){
+      text,title,language
+    }
+  }`;
+const createServiceQL = gql`mutation createService($text:String, $title:String, $lang:String){
+    createServices(text:$text, title:$title, language:$lang){
       text,title,language
     }
   }`;
@@ -195,4 +224,7 @@ export default compose(
   graphql(updateServiceQL, {
     name: 'updateService'
   }),
+  graphql(createServiceQL, {
+    name: 'createService'
+  })
 )(ServiceEdit);
