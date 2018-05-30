@@ -3,20 +3,38 @@ import { compose, graphql, ApolloProvider } from 'react-apollo';
 import gql from 'graphql-tag';
 import { link } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { EditorState } from 'draft-js';
+import { EditorState, convertToRaw, ContentState, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 
 class ServiceEdit extends React.Component { 
 
   constructor(props) {
     super(props);
-    this.state = {
-      title: '',
-      text: '',
-      language: 'CZ',
-      editorState: EditorState.createEmpty()
-    };
+    
+    
+    if( this.props.data && this.props.data.Services ){
+      const html = this.props.data.Services.text;
+      const blocks = htmlToDraft(html);
+      const contentState = ContentState.createFromBlockArray(blocks);
+      const editorState = EditorState.createWithContent(contentState);
+      this.state = {
+       title: this.props.data.Services.title,
+       language: this.props.data.Services.language,
+       editorState
+      }
+    } else {
+      const editorState = EditorState.createEmpty();
+      this.state = {
+        id: props.match.params.id,
+        title: '',
+        language: 'CZ',
+        editorState 
+      }
+    }
+    
     this.languages = [
       'CZ',
       'DE',
@@ -24,14 +42,14 @@ class ServiceEdit extends React.Component {
       'SP',
       'SK'
     ]
-    this.edit = this.edit.bind(this);
+    this.save = this.save.bind(this);
+    this.load = this.load.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onEditorStateChange = this.onEditorStateChange.bind(this);
     console.log('ServiceEdit', this.props )
-    // this.props.id
   }
 
   handleTitleChange(event) {
@@ -47,24 +65,9 @@ class ServiceEdit extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
   }
-  edit() {
-      const title = this.state.title;
-      const text = this.state.text;
-      const language = this.state.language;
+
   
-     this.props.updateService({
-       variables:{
-         id: this.props.id,
-        title : this.state.title,
-        text : this.state.text,
-        lang : this.state.language
-        }
-      }).then((success)=> {
-        this.setState({
-          edited : true
-        })
-    })
-    }
+
     onEditorStateChange (editorState)  {
       
       this.setState({
@@ -72,13 +75,54 @@ class ServiceEdit extends React.Component {
 
       });
     };
-    componentWillReceiveProps(nextProps) {
-      if(nextProps.data.Services && nextProps.data){
+
+   
+    load(services) {
+
+       // transforming from HTML -> EditorState
+      const html = services.text;
+      const blocks = htmlToDraft(html);
+      const contentState = ContentState.createFromBlockArray(blocks);
+      const editorState = EditorState.createWithContent(contentState);
+      console.log('ServiceEdit::load', services)
+      this.setState({
+        title: services.title,
+        language: services.language,
+        editorState: editorState
+      })
+    }
+
+    
+    save() {
+      const title = this.state.title;
+      const language = this.state.language;
+
+      // transforming EditorState -> HTML
+      const contentState = this.state.editorState.getCurrentContent();
+      const blocks = convertToRaw(contentState);
+      const html = draftToHtml(blocks);
+  
+      const variables = {
+        id: this.state.id,
+        title : title,
+        text : html,
+        lang : language
+      }
+      console.log('ServiceEdit::edit', variables)
+        this.props.updateService({
+       variables: variables
+      }).then((success)=> {
         this.setState({
-          title: nextProps.data.Services.title,
-          text: nextProps.data.Services.text,
-          language: nextProps.data.Services.language
+          edited : true
         })
+    })
+    }
+
+
+    componentWillReceiveProps(nextProps) {
+      console.log('ServiceEdit::componentWillReceiveProps', nextProps )
+      if(nextProps.data && nextProps.data.Services ){
+        this.load(nextProps.data.Services);
       }
     }
 
@@ -110,7 +154,7 @@ class ServiceEdit extends React.Component {
           <select value={this.state.language} onChange={this.handleSelectChange}>
             {this.languages.map((lang,index)=> {return <option key ={index} value={lang} >{lang}</option>})}
           </select>
-          <button onClick={this.edit}>Edit</button>
+          <button onClick={this.save}>Edit</button>
         </form>
       </div>
     );
@@ -124,22 +168,31 @@ const getServiceQL = gql`query getService($id:ID!){
   }
 }
 `;
-
   const updateServiceQL = gql` mutation updateService($id :ID!, $text:String, $title:String, $lang:String){
     updateServices(id:$id, text:$text, title:$title, language:$lang){
       text,title,language
     }
   }`;
 
-const ServiceEditQL = compose(
-  graphql(getServiceQL),
+export default compose(
+  graphql(getServiceQL, {
+    skip: (props) => {
+      console.log('ServiceEdit::compose::skip', props)
+      return !(props.match && props.match.params && props.match.params.id);
+    },
+    options: (props) => {
+      console.log('ServiceEdit::compose::options', props)
+      if(props.match && props.match.params && props.match.params.id){
+        return {
+          variables:{
+            id: props.match.params.id
+          }
+        }
+      }
+      return {}
+    },
+  }),
   graphql(updateServiceQL, {
     name: 'updateService'
   }),
 )(ServiceEdit);
-
-export default class ServiceEditMatchId extends React.Component { 
-  render() {
-    return (<ServiceEditQL id={this.props.match.params.id} />)
-  }
-}
