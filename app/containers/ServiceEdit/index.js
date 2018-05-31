@@ -45,6 +45,7 @@ class ServiceEdit extends React.Component {
     ]
     this.save = this.save.bind(this);
     this.load = this.load.bind(this);
+    this.create = this.create.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -121,6 +122,7 @@ class ServiceEdit extends React.Component {
     create() {
       const title = this.state.title;
       const language = this.state.language;
+      const id = this.state.id;
 
       // transforming EditorState -> HTML
       const contentState = this.state.editorState.getCurrentContent();
@@ -135,11 +137,16 @@ class ServiceEdit extends React.Component {
       console.log('ServiceEdit::create', variables)
         this.props.createService({
        variables: variables
-      }).then((success)=> {
+      })
+        .then((success)=> {
+          console.log('then', success)
         this.setState({
+          id : success.createService.id,
           created : true
+          
         })
     })
+    
     }
 
 
@@ -178,7 +185,8 @@ class ServiceEdit extends React.Component {
           <select value={this.state.language} onChange={this.handleSelectChange}>
             {this.languages.map((lang,index)=> {return <option key ={index} value={lang} >{lang}</option>})}
           </select>
-          <button onClick={this.save}>Save</button>
+          {this.state.id ? <button  onClick={this.save} >Save</button> :
+          <button  onClick={this.create}> Create </button>}
         </form>
       </div>
     );
@@ -194,7 +202,7 @@ const getServiceQL = gql`query getService($id:ID!){
 `;
 const updateServiceQL = gql` mutation updateService($id :ID!, $text:String, $title:String, $lang:String){
     updateServices(id:$id, text:$text, title:$title, language:$lang){
-      text,title,language
+      text,title,language,id
     }
   }`;
 const createServiceQL = gql`mutation createService($text:String, $title:String, $lang:String){
